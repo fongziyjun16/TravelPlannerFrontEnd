@@ -1,12 +1,1 @@
 @import '~antd/dist/antd.css';
-
-#InputContainer{
-  position: absolute;
-  top: 15%;
-  left: 25%;
-  width: 50%;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-}
