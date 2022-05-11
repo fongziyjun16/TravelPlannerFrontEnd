@@ -33,7 +33,12 @@ class App extends React.Component {
         style={{ width: "30%", left: "35%"}}
         onChange={this.updateInputValue}
         onPressEnter={this.searchCity}
-      />
+      ></Input>
+      <Button
+      type = "primary" 
+      size = 'large'
+      style = {{ width: "10%", marginLeft: "40%"}}
+      OnClick = {this.searchCity}>Search</Button>
     </div>
   )
 
