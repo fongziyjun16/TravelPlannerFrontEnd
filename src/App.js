@@ -1,5 +1,5 @@
 import React from 'react';
-import { Input } from 'antd';
+import { Input, Button  } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 
 class App extends React.Component {
@@ -30,15 +30,16 @@ class App extends React.Component {
         placeholder="Search For Your Favorite City!" 
         size='large'
         maxLength={50}
-        style={{ width: "30%", left: "35%"}}
+        style={{ width: "30%", left: "32.5%"}}
         onChange={this.updateInputValue}
         onPressEnter={this.searchCity}
       ></Input>
       <Button
-      type = "primary" 
-      size = 'large'
-      style = {{ width: "10%", marginLeft: "40%"}}
-      OnClick = {this.searchCity}>Search</Button>
+        type = "primary" 
+        size = 'large'
+        style = {{ width: "5%", left: "32.5%"}}
+        OnClick = {this.searchCity}
+      >Search</Button>
     </div>
   )
 
