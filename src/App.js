@@ -1,49 +1,33 @@
-import React from 'react';
-import { Input, Button  } from 'antd';
-import { SearchOutlined } from '@ant-design/icons';
+import { Component } from 'react';
+import { Layout } from "antd";
+import AppHeader from "./components/AppHeader";
+import AppContent from "./components/AppContent";
 
-class App extends React.Component {
+class App extends Component {
+
   state = {
-    inputValue: ''
+
   }
 
-  updateInputValue = (e) => {
-    this.setState({
-      inputValue: e.target.value,
-    })
+  handleLoginSuccess = (token) => {
+
   }
 
-  searchCity = () => {
-    
+  handleLogout = () => {
+
   }
 
+  render() {
+    return (
+      <>
+        <Layout style={{ height: "100vh" }}>
+          <AppHeader handleLoginSuccess={this.handleLoginSuccess} handleLogout={this.handleLogout}/>
+          <AppContent />
+        </Layout>
+      </>
+    )
+  }
 
-  render = () => (
-    <div>
-      <img 
-        src="BIGSMART.jpg" 
-        alt='One Big Smart!' 
-        style={{padding: 30, display: "block", marginLeft: "auto", marginRight: "auto", marginTop: "5%"}}
-      ></img>
-      <Input 
-        prefix={<SearchOutlined />}
-        placeholder="Search For Your Favorite City!" 
-        size='large'
-        maxLength={50}
-        style={{ width: "30%", left: "32.5%"}}
-        onChange={this.updateInputValue}
-        onPressEnter={this.searchCity}
-      ></Input>
-      <Button
-        type = "primary" 
-        size = 'large'
-        style = {{ width: "5%", left: "32.5%"}}
-        OnClick = {this.searchCity}
-      >Search</Button>
-    </div>
-  )
-
-  
 }
 
 export default App;
