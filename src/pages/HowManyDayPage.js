@@ -43,12 +43,6 @@ class HowManyDayPage extends Component {
     }
 }
 
-// export default function (props) {
-//     const navigate = useNavigate();
-//     return <PlacesPage {...props} navigate={navigate} />
-// };
-
-
 export default function(props) {
     const navigate = useNavigate();
     return <HowManyDayPage {...props} navigate={navigate} />
