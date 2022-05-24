@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import {Button, Form, Space, Row, Col} from "antd";
+import {Button, Form, Space, Row, Col, Radio} from "antd";
 import {CheckCircleOutlined} from "@ant-design/icons";
 import {useNavigate} from "react-router-dom";
 import { Modal, Card } from 'antd';
@@ -12,12 +12,14 @@ class PlacesPage extends Component {
         isModalVisible : false,
         numberOfCard: 8,
         selectedCard: 0,
-        selectedCardDescription: ""
+        selectedCardDescription: "",
+        value : 0,
+        check : false
     };
 
     componentDidMount() {
         this.setState({
-            numberOfCard: this.getRandomInt(10, 21)
+            numberOfCard: this.getRandomInt(14, 14)
         })
         // console.log(this.state.numberOfCard);
     }
@@ -42,6 +44,22 @@ class PlacesPage extends Component {
         });
     }
 
+    handleOnChange = (e) => {
+        //console.log('radio checked', e.target.value);
+        if(this.Radio === e){
+            this.Radio = ' '
+            return
+        }
+        this.Radio = e
+    }
+    
+
+    handleOnClickRadio = () => {
+        this.setState({
+            isModalVisible : false
+        });
+    }
+
     getRandomInt = (min, max) => {
         min = Math.ceil(min);
         max = Math.floor(max);
@@ -61,6 +79,11 @@ class PlacesPage extends Component {
                                 flag={index}
                                 onClick={this.handleCardOnClick}
                                 title={"Photo " + index}
+                                extra={
+                                <Radio 
+                                    onChange={this.handleOnChange} 
+                                    >
+                                </Radio>}
                                 hoverable
                                 style={{ width: 280 }}
                                 cover={<img alt="example" src="https://www.california-tour.com/blog/wp-content/uploads/2017/08/Fotolia_LA-downtown-XL.jpg" />}>
