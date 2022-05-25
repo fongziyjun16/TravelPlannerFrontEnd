@@ -25,7 +25,7 @@ class HowManyDayPage extends Component {
                                 }}>
                                 <Form.Item>
                                     <Form.Item name="days" noStyle>
-                                        <InputNumber min={1} max={10} />
+                                        <InputNumber min={1} max={15} />
                                     </Form.Item>
                                     <span className="ant-form-text"> days</span>
                                 </Form.Item>
