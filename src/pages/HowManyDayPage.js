@@ -1,6 +1,6 @@
-import { Row, Col, Space, Form, InputNumber, Button, DatePicker } from "antd";
+import { Row, Col, Space, Form, Button, DatePicker } from "antd";
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 
 const { RangePicker } = DatePicker;
 
@@ -9,18 +9,19 @@ function HowManyDayPage() {
     const navigate = useNavigate();
 
     function handleConfirm(values) {
-        const { days: currDays, dateRange } = values;
+        const { /*days: currDays, */dateRange } = values;
         // console.log(dateRange[0].format('YYYY-MM-DD'));
+        let startDate = dateRange[0].format('YYYY-MM-DD');
+        let endDate = dateRange[1].format('YYYY-MM-DD');
         navigate("/map", {
             replace: false,
             state: {
-                days: currDays,
-                startDate: dateRange[0].format('YYYY-MM-DD'),
-                endDate: dateRange[1].format('YYYY-MM-DD'),
+                days: Math.abs(new Date(startDate) - new Date(endDate)) / (1000 * 3600 * 24) + 1,
+                startDate: startDate,
+                endDate: endDate
             }
         });
     }
-
 
     return (
         <>
@@ -34,12 +35,12 @@ function HowManyDayPage() {
                             initialValues={{
                                 'days': 5
                             }}>
-                            <Form.Item>
-                                <Form.Item name="days" noStyle>
-                                    <InputNumber min={1} max={10}/>
-                                </Form.Item>
-                                <span className="ant-form-text"> days</span>
-                            </Form.Item>
+                            {/*<Form.Item>*/}
+                            {/*    <Form.Item name="days" noStyle>*/}
+                            {/*        <InputNumber min={1} max={10}/>*/}
+                            {/*    </Form.Item>*/}
+                            {/*    <span className="ant-form-text"> days</span>*/}
+                            {/*</Form.Item>*/}
                             <Form.Item name="dateRange" rules={[{ type: 'array', required: true, message: 'Please select time!' }]}>
                                 <RangePicker />
                             </Form.Item>

@@ -1,123 +1,81 @@
-import React, { Component } from "react";
-import {Button, Form, Space, Row, Col, Radio} from "antd";
+import React, {useEffect, useState} from "react";
+import {Button, Space, Row, Col, message, Checkbox} from "antd";
 import {CheckCircleOutlined} from "@ant-design/icons";
 import {useNavigate} from "react-router-dom";
-import { Modal, Card } from 'antd';
+import {Card } from 'antd';
+import axios from "axios";
 
-const { Meta } = Card;
+function PlacesPage() {
 
-class PlacesPage extends Component {
+    const navigate = useNavigate();
+    let selectedCategories = [];
+    const [categories, setCategories] = useState([]);
 
-    state = {
-        isModalVisible : false,
-        numberOfCard: 8,
-        selectedCard: 0,
-        selectedCardDescription: "",
-        value : 0,
-        check : false
-    };
+    useEffect(() => {
+        axios.get(
+            '/search/categories'
+        ).then(response => {
+            // console.log(response);
+            setCategories(response.data);
+        }).catch(error => {
+            // console.log(error);
+            message.error('Categories Request Failure!');
+        });
+    }, []);
 
-    componentDidMount() {
-        this.setState({
-            numberOfCard: this.getRandomInt(14, 14)
+    function handleCheckboxesOnChange(checkedValues) {
+        // console.log(checkedValues);
+        let categoriesIndexSet = new Set();
+        checkedValues.forEach((index) => {
+            categoriesIndexSet.add(index);
         })
-        // console.log(this.state.numberOfCard);
-    }
-
-    handleContinue = () => {
-        this.props.navigate('/days');
-    }
-    
-    handleCardOnClick = (e) => {
-        // console.log(e.currentTarget.getAttribute("flag") * 1);
-        const cardIndex = e.currentTarget.getAttribute("flag") * 1;
-        this.setState({
-            isModalVisible: true,
-            selectedCard: cardIndex,
-            selectedCardDescription: 'Current Card is ' + cardIndex
-        });
-    }
-
-    handleModalCancel = () => {
-        this.setState({
-            isModalVisible: false
-        });
-    }
-
-    handleOnChange = (e) => {
-        //console.log('radio checked', e.target.value);
-        if(this.Radio === e){
-            this.Radio = ' '
-            return
-        }
-        this.Radio = e
+        selectedCategories = [];
+        categories.forEach((category, index) => {
+            if (categoriesIndexSet.has(index)) {
+                selectedCategories.push(category.type);
+            }
+        })
     }
     
-
-    handleOnClickRadio = () => {
-        this.setState({
-            isModalVisible : false
-        });
+    function handleContinue() {
+        localStorage.setItem('selectedCategories', JSON.stringify(selectedCategories));
+        navigate('/days');
     }
 
-    getRandomInt = (min, max) => {
-        min = Math.ceil(min);
-        max = Math.floor(max);
-        return Math.floor(Math.random() * (max - min) + min); 
-        //The maximum is exclusive and the minimum is inclusive
-    }
-
-    render() {
-        return (
-            <>
-                <Space direction="vertical" size="middle" style={{ display: 'flex' }} >
-                    <h1>Check out some beautiful places in this lovely city!</h1>
+    return (
+        <>
+            <Space direction="vertical" size="middle" style={{ display: 'flex' }} >
+                <h1>Check out some beautiful places in this lovely city!</h1>
+                <Checkbox.Group onChange={handleCheckboxesOnChange}>
                     <Space size={[8, 16]} wrap>
-                        {new Array(this.state.numberOfCard).fill(null).map((_, index) => (
+                        {categories.map((category, index) => (
                             <Card
-                                key={index} 
+                                key={index}
                                 flag={index}
-                                onClick={this.handleCardOnClick}
-                                title={"Photo " + index}
-                                extra={
-                                <Radio 
-                                    onChange={this.handleOnChange} 
-                                    >
-                                </Radio>}
+                                title={category.type}
                                 hoverable
-                                style={{ width: 280 }}
-                                cover={<img alt="example" src="https://www.california-tour.com/blog/wp-content/uploads/2017/08/Fotolia_LA-downtown-XL.jpg" />}>
-                                <Meta title="G" description="This is a beautiful city." />
-                            </Card>                                
+                            >
+                                <Checkbox value={index} />
+                            </Card>
                         ))}
                     </Space>
-                    <Row align="middle" justify="center" gutter={[0, 16]}>
-                        <Col>
-                            <Button
-                                typeof= "primary"
-                                shape= "round"
-                                size= "large"
-                                icon={<CheckCircleOutlined />}
-                                onClick={this.handleContinue}>
-                                Ready to build your Travel Plan?
-                            </Button>
-                        </Col>
-                    </Row>
-                </Space>
-                <Modal  
-                    title={"Card " + this.state.selectedCard} 
-                    visible={this.state.isModalVisible}
-                    footer={null}
-                    onCancel={this.handleModalCancel}
-                    >
-                    <span>{"Description: "  + this.state.selectedCardDescription}</span>
-                </Modal>
-            </>
-        )
-    }
+                </Checkbox.Group>
+                <Row align="middle" justify="center" gutter={[0, 16]}>
+                    <Col>
+                        <Button
+                            typeof= "primary"
+                            shape= "round"
+                            size= "large"
+                            icon={<CheckCircleOutlined />}
+                            onClick={handleContinue}>
+                            Ready to build your Travel Plan?
+                        </Button>
+                    </Col>
+                </Row>
+            </Space>
+        </>
+    );
+
 }
 
-export default function (props) {
-    const navigate = useNavigate();
-    return <PlacesPage {...props} navigate={navigate} />
-};
+export default PlacesPage;

@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Button, Col, Collapse, Dropdown, Layout, List, Menu, Popover, Row, Input} from "antd";
+import {Button, Col, Collapse, Dropdown, Layout, List, Menu, Popover, Row, Input, Modal, message} from "antd";
 import {
     ArrowDownOutlined,
     ArrowUpOutlined,
@@ -8,6 +8,8 @@ import {
     InfoCircleOutlined
 } from "@ant-design/icons";
 import PubSub from 'pubsub-js'
+import axios from "axios";
+import {useNavigate} from "react-router-dom";
 
 const {Header, Content, Footer} = Layout;
 const {Panel} = Collapse;
@@ -15,11 +17,20 @@ const {TextArea} = Input;
 
 function PlanBoard(props) {
 
+    const navigate = useNavigate();
     const days = props.days;
+    const selectedCategories = JSON.parse(localStorage.getItem('selectedCategories') === null ? '[]' : localStorage.getItem('selectedCategories'));
     let selectedLocation = {};
+    const [listLoading, setListLoading] = useState(true);
+    let points = [];
     const [locations, setLocations] = useState([]);
     const [plans, setPlans] = useState([]);
     const [addItems, setAddItems] = useState([]); // dropdown menu
+    const [locationInfoVisible, setLocationInfoVisible] = useState(false);
+    const [locationInfo, setLocationInfo] = useState({
+        name: '',
+        description: ''
+    });
     let note = '';
 
     useEffect(() => {
@@ -30,39 +41,6 @@ function PlanBoard(props) {
         }
         setPlans([...currPlans]);
 
-        let placesList = [
-            {
-                name: 'Orlando, FL',
-                description: 'This is a city in Florida',
-                lat: 28.538336,
-                lng: -81.379234
-            },
-            {
-                name: 'Gainesville, FL',
-                description: 'There is a famous university.',
-                lat: 29.651634,
-                lng: -82.324829
-            },
-            {
-                name: 'Atlanta, GA',
-                description: 'There is a famous Air Port',
-                lat: 33.748997,
-                lng: -84.387985
-            },
-            {
-                name: 'New York, NY',
-                description: 'Spider Man is Peter Parker',
-                lat: 40.730610,
-                lng: -73.935242
-            }
-        ];
-        let currLocations = [];
-        for (let i = 1; i <= placesList.length; i++) {
-            placesList[i - 1].index = i;
-            currLocations.push(placesList[i - 1]);
-        }
-        setLocations([...currLocations]);
-
         let currAddItems = [];
         for (let i = 1; i <= days; i++) {
             currAddItems.push({
@@ -70,16 +48,57 @@ function PlanBoard(props) {
                 key: i + ''
             });
         }
-        setAddItems([...currAddItems])
-    }, [])
+        setAddItems([...currAddItems]);
 
-    function renderLocationDetails(location) {
-        return (
-            <>
-                <span>{location.description}</span>
-            </>
-        );
-    }
+        // console.log(selectedCategories);
+        points = [];
+        if (selectedCategories.length === 0) {
+            axios.get(
+                '/search/points'
+            ).then(response => {
+                // console.log(response);
+                points = response.data;
+                setLocations(points.map((point) => {
+                    point.lat = point.latitude;
+                    point.lng = point.longitude;
+                    return point;
+                }));
+                // console.log(points);
+                setListLoading(false);
+            }).catch(error => {
+                console.log(error);
+            });
+        } else {
+            // console.log(selectedCategories);
+            let pointSet = [];
+            let counter = 0;
+            selectedCategories.forEach((category, index) => {
+                pointSet.push([]);
+                axios.get(
+                    '/search/category?category_name=' + encodeURIComponent(category)
+                ).then(response => {
+                    pointSet[index] = response.data;
+                    counter++;
+                    if (counter === selectedCategories.length) {
+                        // console.log(pointSet);
+                        points = [];
+                        pointSet.forEach((sub) => {
+                            sub.forEach((point, index) => {
+                                point.lng = point.longitude;
+                                point.lat = point.latitude;
+                                points.push(point);
+                            });
+                            setListLoading(false);
+                        });
+                        // console.log(points);
+                        setLocations([...points])
+                    }
+                }).catch(error => {
+                    console.log(index + ' ' + error)
+                })
+            });
+        }
+    }, [])
 
     function handleAddLocation(item) {
         const { key: day } = item;
@@ -157,10 +176,73 @@ function PlanBoard(props) {
         // console.log(e.target.value);
         note = e.target.value;
     }
-    
+
+    function handleCloseLocationInfo() {
+        setLocationInfoVisible(false);
+    }
+
     function handleSavePlan() {
-        console.log(plans);
-        console.log(note);
+        const token = localStorage.getItem('token');
+        if (token === null || token === '') {
+            message.error('Please Login before save plan');
+            return;
+        }
+
+        if (plans.length === 0) {
+            message.error('Plan is EMPTY');
+            return;
+        }
+
+        for (let i = 0; i < plans.length; i++) {
+            if (plans[i].length === 0) {
+                message.error('Your Plan is not COMPLETE');
+                return;
+            }
+        }
+
+        props.setPageStatus(true);
+        let myPlan = {};
+        myPlan.note = note;
+        myPlan.daily_plans = [];
+        const fromDate = new Date(props.startDate);
+        plans.forEach((plan, index) => {
+            const currDate = new Date(fromDate.setDate(fromDate.getDate() + 1));
+            // console.log(currDate.toLocaleDateString());
+            const currPlan = plan.map((location) => {
+                return {
+                    id: location.id
+                }
+            });
+            const year = currDate.getFullYear();
+            const month = currDate.getMonth() + 1;
+            const date = currDate.getDate();
+            myPlan.daily_plans.push({
+                date: year + '-' +
+                    (month + 1 < 10 ? '0' + month: month) + '-' +
+                    (date < 10 ? '0' + date : date),
+                points: currPlan
+            });
+        });
+
+        console.log(myPlan);
+        axios.post(
+            '/plan',
+            myPlan,
+            {
+                headers: {
+                    Authorization: 'Bearer ' + token
+                }
+            }
+        ).then(response => {
+            console.log(response);
+            navigate('/success', { replace: true });
+            props.setPageStatus(false);
+        }).catch(error => {
+            console.log(error);
+            message.error('Save Your Plan Failure');
+            props.setPageStatus(false);
+        })
+
     }
 
     return (
@@ -241,6 +323,7 @@ function PlanBoard(props) {
                     <Layout style={{height: "100%"}}>
                         <Content style={{height: "0px", border: "groove", overflow: "auto"}}>
                             <List
+                                loading={listLoading}
                                 itemLayout="horizontal"
                                 dataSource={locations}
                                 renderItem={item => (
@@ -256,9 +339,15 @@ function PlanBoard(props) {
                                                     add
                                                 </a>
                                             </Dropdown>,
-                                            <Popover placement="right" title={item.name} content={renderLocationDetails(item)}>
-                                                <a><InfoCircleOutlined /></a>
-                                            </Popover>
+                                            <a
+                                                onClick={(e) => {
+                                                    setLocationInfo(item);
+                                                    setLocationInfoVisible(true);
+                                                    e.preventDefault();
+                                                }}
+                                            >
+                                                <InfoCircleOutlined />
+                                            </a>
                                         ]}>
                                         <List.Item.Meta
                                             avatar={<EnvironmentOutlined />}
@@ -278,6 +367,14 @@ function PlanBoard(props) {
                     </Layout>
                 </Col>
             </Row>
+            <Modal
+                title={locationInfo.name}
+                visible={locationInfoVisible}
+                onCancel={handleCloseLocationInfo}
+                footer={null}
+            >
+                <p>{locationInfo.description}</p>
+            </Modal>
         </>
     );
 }

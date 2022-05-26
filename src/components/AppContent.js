@@ -7,6 +7,7 @@ import HowManyDayPage from "../pages/HowManyDayPage";
 import UserProfile from "../pages/UserProfile";
 import GoogleMapPage from "../pages/GoogleMapPage"
 import PlanPage from "../pages/PlanPage";
+import SavePlanSuccessPage from "../pages/SavePlanSuccessPage";
 
 const { Content } = Layout;
 
@@ -22,6 +23,7 @@ class AppContent extends Component {
                         <Route path="/profile" element={<UserProfile />}/>
                         {/* <Route path="/map" element={<GoogleMapPage />}/> */}
                         <Route path="/map" element={<PlanPage />}/>
+                        <Route path="/success" element={<SavePlanSuccessPage />}/>
                         <Route path="*" element={<Navigate to="/search" replace/>}/>
                     </Routes>
                 </Content>

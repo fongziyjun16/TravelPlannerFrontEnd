@@ -15,6 +15,16 @@ class AppHeader extends Component {
         isSignUpModalVisible: false,
     };
 
+    componentDidMount() {
+        const username = localStorage.getItem('username');
+        if (username !== null && username !== '') {
+            this.setState({
+                login: true,
+                username: username
+            });
+        }
+    }
+
     getUserMenuItem = () => {
         let menuItems = [
             { label: 'Sign In', key: 'userSignIn' },
@@ -53,6 +63,7 @@ class AppHeader extends Component {
                 isSignUpModalVisible: false,
             });
             localStorage.setItem('token', '');
+            localStorage.setItem('username', '');
             // this.props.navigate('/search');
         }
     }
@@ -86,6 +97,7 @@ class AppHeader extends Component {
                 isSignUpModalVisible: false,
             })
             localStorage.setItem('token', response.data.token);
+            localStorage.setItem('username', values.username);
         }).catch(error => {
             message.error('Login Failure! ' + error.response.data);
         });
