@@ -64,7 +64,7 @@ class AppHeader extends Component {
             });
             localStorage.setItem('token', '');
             localStorage.setItem('username', '');
-            // this.props.navigate('/search');
+            this.props.navigate('/search');
         }
     }
 

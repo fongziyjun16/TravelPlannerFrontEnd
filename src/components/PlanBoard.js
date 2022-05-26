@@ -19,6 +19,7 @@ function PlanBoard(props) {
 
     const navigate = useNavigate();
     const days = props.days;
+    const [collapseActiveKeys, setCollapseActiveKeys] = useState([]);
     const selectedCategories = JSON.parse(localStorage.getItem('selectedCategories') === null ? '[]' : localStorage.getItem('selectedCategories'));
     let selectedLocation = {};
     const [listLoading, setListLoading] = useState(true);
@@ -49,6 +50,12 @@ function PlanBoard(props) {
             });
         }
         setAddItems([...currAddItems]);
+
+        let currActiveKeys = [];
+        for (let i = 1; i <= days; i++) {
+            currActiveKeys.push(i);
+        }
+        setCollapseActiveKeys([...currActiveKeys]);
 
         // console.log(selectedCategories);
         points = [];
@@ -224,7 +231,7 @@ function PlanBoard(props) {
             });
         });
 
-        console.log(myPlan);
+        // console.log(myPlan);
         axios.post(
             '/plan',
             myPlan,
@@ -234,7 +241,7 @@ function PlanBoard(props) {
                 }
             }
         ).then(response => {
-            console.log(response);
+            // console.log(response);
             navigate('/success', { replace: true });
             props.setPageStatus(false);
         }).catch(error => {
@@ -262,7 +269,7 @@ function PlanBoard(props) {
                             <span>End: {props.endDate}</span>
                         </Header>
                         <Content style={{height: "580px", border: "groove", marginTop: 5, overflow: "auto"}}>
-                            <Collapse defaultActiveKey={[1]} style={{margin: "5px"}}>
+                            <Collapse activeKey={collapseActiveKeys} style={{margin: "5px"}}>
                                 {new Array(days).fill(null).map((_, index) => (
                                     <Panel
                                         header={"Day " + (index + 1)}
