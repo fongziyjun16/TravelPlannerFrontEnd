@@ -46,6 +46,7 @@ class PlacesPage extends Component {
 
     handleOnChange = (e) => {
         //console.log('radio checked', e.target.value);
+        e.stopPropagation();
         if(this.Radio === e){
             this.Radio = ' '
             return
@@ -81,7 +82,7 @@ class PlacesPage extends Component {
                                 title={"Photo " + index}
                                 extra={
                                 <Radio 
-                                    onChange={this.handleOnChange} 
+                                    onClick={this.handleOnChange} 
                                     >
                                 </Radio>}
                                 hoverable
