@@ -10,6 +10,7 @@
     "@testing-library/user-event": "^13.5.0",
     "@types/google.maps": "^3.48.7",
     "antd": "^4.19.2",
+    "axios": "^0.27.2",
     "google-maps-react": "^2.0.6",
     "pubsub-js": "^1.9.4",
     "react": "^18.1.0",

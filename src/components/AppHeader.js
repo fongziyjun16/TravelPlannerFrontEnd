@@ -1,7 +1,8 @@
 import React, { Component } from "react";
-import { Layout, Dropdown, Menu, Button, Modal, Form, Input, Row, Col } from "antd";
+import { Layout, Dropdown, Menu, Button, Modal, Form, Input, Row, Col, message } from "antd";
 import { UserOutlined } from "@ant-design/icons"
 import {useNavigate} from "react-router-dom";
+import axios from "axios";
 
 const { Header } = Layout;
 
@@ -51,8 +52,8 @@ class AppHeader extends Component {
                 isSignInModalVisible: false,
                 isSignUpModalVisible: false,
             });
-            this.props.handleLogout();
-            this.props.navigate('/search');
+            localStorage.setItem('token', '');
+            // this.props.navigate('/search');
         }
     }
 
@@ -71,23 +72,40 @@ class AppHeader extends Component {
     }
 
     signInSubmit = (values) => {
-        const {username: curUsername, password: curPassword} = values
-        console.log(curUsername)
-        console.log(curPassword)
-        this.setState({
-            login: true,
-            username: curUsername,
-            isSignInModalVisible: false
-        })
-        this.props.handleLoginSuccess('token');
+        axios.post(
+            '/authenticate',
+            {
+                'username': values.username,
+                'password': values.password
+            }
+        ).then(response => {
+            this.setState({
+                login: true,
+                username: values.username,
+                isSignInModalVisible: false,
+                isSignUpModalVisible: false,
+            })
+            localStorage.setItem('token', response.data.token);
+        }).catch(error => {
+            message.error('Login Failure! ' + error.response.data);
+        });
     }
 
     signUpSubmit = (values) => {
-        const {username: curUsername, password: curPassword} = values
-        console.log(curUsername)
-        console.log(curPassword)
-        this.setState({
-            isSignUpModalVisible: false
+        axios.post(
+            '/register',
+            {
+                'username': values.username,
+                'password': values.password,
+                'email': values.email,
+                'first_name': values.firstname,
+                'last_name': values.lastname
+            }
+        ).then(response => {
+            message.success("Register Successfully! ");
+        }).catch(error => {
+            // console.log(error);
+            message.error('Register Failure! ' + error.response.data);
         });
     }
 
@@ -96,7 +114,7 @@ class AppHeader extends Component {
             <>
                 <Header style={{ display: "flex", justifyContent: "space-between" }}>
                     <div style={{ fontSize: 16, fontWeight: 600, color: "white" }}>
-                        Smart Trip
+                        Travel Planner
                     </div>
                     <div>
                         <Dropdown overlay={ <Menu items={ this.getUserMenuItem() } onClick= { this.userMenuClick }/> }>
@@ -196,6 +214,24 @@ class AppHeader extends Component {
                                     })
                                 ]}>
                                 <Input.Password />
+                            </Form.Item>
+                            <Form.Item
+                                label="Email"
+                                name="email"
+                                rules={[{ type: 'email', required: true, message: 'Please input your Email!' }]}>
+                                <Input />
+                            </Form.Item>
+                            <Form.Item
+                                label="Firstname"
+                                name="firstname"
+                                rules={[{ required: true, message: 'Please input your firstname!' }]}>
+                                <Input />
+                            </Form.Item>
+                            <Form.Item
+                                label="Lastname"
+                                name="lastname"
+                                rules={[{ required: true, message: 'Please input your lastname!' }]}>
+                                <Input />
                             </Form.Item>
                             <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
                                 <Button typeof="primary" htmlType="submit">
