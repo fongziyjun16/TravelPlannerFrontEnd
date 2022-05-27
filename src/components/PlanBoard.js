@@ -93,6 +93,9 @@ function PlanBoard(props) {
                 });
                 setLocations([...points])
                 setListLoading(false);
+            }).catch(reason => {
+                message.error('Points Request Error');
+                console.log(reason);
             });
         }
     }, [])
