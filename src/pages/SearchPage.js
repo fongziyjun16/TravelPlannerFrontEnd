@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import {Button, Col, Form, Image, Input, Row, Space} from "antd";
 import logo from '../assets/images/Logo.png'
 import {SearchOutlined} from "@ant-design/icons";
