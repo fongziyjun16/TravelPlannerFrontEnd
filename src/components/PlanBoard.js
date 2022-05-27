@@ -77,32 +77,22 @@ function PlanBoard(props) {
             });
         } else {
             // console.log(selectedCategories);
-            let pointSet = [];
-            let counter = 0;
-            selectedCategories.forEach((category, index) => {
-                pointSet.push([]);
-                axios.get(
-                    '/search/category?category_name=' + encodeURIComponent(category)
-                ).then(response => {
-                    pointSet[index] = response.data;
-                    counter++;
-                    if (counter === selectedCategories.length) {
-                        // console.log(pointSet);
-                        points = [];
-                        pointSet.forEach((sub) => {
-                            sub.forEach((point, index) => {
-                                point.lng = point.longitude;
-                                point.lat = point.latitude;
-                                points.push(point);
-                            });
-                            setListLoading(false);
-                        });
-                        // console.log(points);
-                        setLocations([...points])
-                    }
-                }).catch(error => {
-                    console.log(index + ' ' + error)
-                })
+            let tasks = [];
+            selectedCategories.forEach((category) => {
+                tasks.push(axios.get('/search/category?category_name=' + encodeURIComponent(category)));
+            });
+            Promise.all(tasks).then(pointSet => {
+                points = [];
+                pointSet.forEach((sub) => {
+                    // console.log(sub);
+                    sub.data.forEach((point, index) => {
+                        point.lng = point.longitude;
+                        point.lat = point.latitude;
+                        points.push(point);
+                    });
+                });
+                setLocations([...points])
+                setListLoading(false);
             });
         }
     }, [])
