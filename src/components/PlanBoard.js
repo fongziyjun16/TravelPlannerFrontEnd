@@ -102,6 +102,12 @@ function PlanBoard(props) {
 
     function handleAddLocation(item) {
         const { key: day } = item;
+        for (let i = 0; i < plans[day - 1].length; i++) {
+            if (plans[day - 1][i].id === selectedLocation.id) {
+                message.warning('Cannot Add SAME Location in one day');
+                return;
+            }
+        }
         plans[day - 1].push(selectedLocation);
         setPlans([...plans]);
     }
