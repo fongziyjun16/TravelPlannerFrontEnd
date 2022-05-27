@@ -27,12 +27,12 @@ function TravelMap() {
 
     function showPoint(msg, point) {
         setShowDirectionsFlag(false);
-        setShowPointFlag(true);
         setZoom(14);
         setCenter({
             lat: point.lat,
             lng: point.lng
         });
+        setShowPointFlag(true);
     }
 
     PubSub.subscribe('ShowDirections', showDirections)
@@ -49,7 +49,7 @@ function TravelMap() {
     return (
         <>
             <LoadScript
-                googleMapsApiKey="AIzaSyCtdpUYxLPw3EnxfIy5T1G8eAUSbt41s1M">
+                googleMapsApiKey="AIzaSyA0aj2bYnzg_lALDWaRs6LMJDWH4iSslRc">
                 <GoogleMap
                     mapContainerStyle={{ width: '100%', height: '100%' }}
                     center={center}
