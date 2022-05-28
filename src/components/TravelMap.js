@@ -66,7 +66,7 @@ function TravelMap(props) {
     return (
         <>
             <LoadScript
-                googleMapsApiKey="AIzaSyA0aj2bYnzg_lALDWaRs6LMJDWH4iSslRc">
+                googleMapsApiKey="AIzaSyCtdpUYxLPw3EnxfIy5T1G8eAUSbt41s1M">
                 <GoogleMap
                     mapContainerStyle={{ width: '100%', height: '100%' }}
                     center={center}
