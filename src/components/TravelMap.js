@@ -62,7 +62,7 @@ function TravelMap(props) {
 
     function directionsCallback (result, status) {
         if (status === 'OK') {
-            // console.log(result);
+            console.log(result);
             setRequestDir(true);
             setResponse(result);
         }

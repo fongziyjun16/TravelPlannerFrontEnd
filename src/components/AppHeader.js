@@ -128,7 +128,7 @@ class AppHeader extends Component {
                 <Header style={{ display: "flex", justifyContent: "space-between", backgroundColor: "#F5F5F5" }}>
                     <div style={{ fontSize: 16, fontWeight: 600, color: "black" }}>
                         <Avatar shape="square" src={logo} />
-                        <span>Smart Trip</span>
+                        <span>SMARTRIP</span>
                     </div>
                     <div>
                         <Dropdown overlay={ <Menu items={ this.getUserMenuItem() } onClick= { this.userMenuClick }/> }>
