@@ -75,9 +75,10 @@ function SearchPage() {
                             <Form.Item>
                                 <span>Now Support Cities: Beijing, Shanghai, Los Angeles, Madrid, Paris, Rome</span>
                             </Form.Item>
-                            <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+                            <Form.Item wrapperCol={{ span: 16 }} style={{ display: 'flex', justifyContent: 'space-around' }}>
                                 <Button
-                                    typeof="primary"
+                                    block
+                                    type="primary"
                                     shape="round"
                                     size="large"
                                     icon={<SearchOutlined  />}

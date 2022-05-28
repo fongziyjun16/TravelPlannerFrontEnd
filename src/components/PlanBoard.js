@@ -128,8 +128,10 @@ function PlanBoard(props) {
     }
 
     function handleLocationUp(day, item) {
+        // console.log(item);
         let currDayPlans = plans[day];
-        const currPos = currDayPlans.findIndex(location => location.index === item.index);
+        const currPos = currDayPlans.findIndex(location => location.id === item.id);
+        // console.log(currPos);
         if (currPos > 0) {
             const lastPos = currPos - 1;
             const temp = currDayPlans[lastPos];
@@ -142,7 +144,7 @@ function PlanBoard(props) {
 
     function handleLocationDown(day, item) {
         let currDayPlans = plans[day];
-        const currPos = currDayPlans.findIndex(location => location.index === item.index);
+        const currPos = currDayPlans.findIndex(location => location.id === item.id);
         if (currPos < currDayPlans.length - 1) {
             const nextPos = currPos + 1;
             const temp = currDayPlans[nextPos];
@@ -156,7 +158,7 @@ function PlanBoard(props) {
     function handleLocationDelete(day, item) {
         let currDayPlans = plans[day];
         currDayPlans.map((location, index) => {
-            if (location.index === item.index) {
+            if (location.id === item.id) {
                 currDayPlans.splice(index, 1);
             }
         });
