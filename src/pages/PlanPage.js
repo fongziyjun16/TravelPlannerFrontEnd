@@ -6,8 +6,6 @@ import TravelMap from "../components/TravelMap";
 
 function PlanPage() {
 
-    const [city, setCity] = useState({});
-    const [defaultCity, setDefaultCity] = useState({});
     const navigate = useNavigate();
     const urlLocation = useLocation();
     const [loading, setLoading] = useState(false);
@@ -18,7 +16,6 @@ function PlanPage() {
             message.error('Choose A CITY First!!!')
             navigate('/search');
         }
-        setCity(city);
     }, [])
 
     function setPageStatus(flag) {
@@ -33,7 +30,6 @@ function PlanPage() {
                     style={{ height: "820px" }}>
                     <Col span={12}>
                         <PlanBoard
-                            city={city}
                             setPageStatus={setPageStatus}
                             days={urlLocation.state !== null ? urlLocation.state.days : 5}
                             startDate={urlLocation.state !== null ? urlLocation.state.startDate : '2022-05-01'}
@@ -41,7 +37,7 @@ function PlanPage() {
                         />
                     </Col>
                     <Col span={12}>
-                        <TravelMap city={city} />
+                        <TravelMap />
                     </Col>
                 </Row>
             </Spin>

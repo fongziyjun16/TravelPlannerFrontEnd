@@ -21,7 +21,6 @@ function PlanBoard(props) {
     const days = props.days;
     let city = {};
     const [cityName, setCityName] = useState('');
-    const [collapseActiveKeys, setCollapseActiveKeys] = useState([]);
     const selectedCategories = JSON.parse(localStorage.getItem('selectedCategories') === null ? '[]' : localStorage.getItem('selectedCategories'));
     let selectedLocation = {};
     const [listLoading, setListLoading] = useState(true);

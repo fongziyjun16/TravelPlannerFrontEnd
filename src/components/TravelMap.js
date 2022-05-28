@@ -29,6 +29,8 @@ function TravelMap(props) {
         PubSub.subscribe('ShowPoint', (msg, point) => {
             // console.log(point);
             setShowDirectionsFlag(false);
+            setResponse(null);
+            setZoom(14);
             setCenter({
                 lat: point.lat,
                 lng: point.lng
@@ -39,7 +41,9 @@ function TravelMap(props) {
         PubSub.subscribe('ShowDirections', (msg, data) => {
             // console.log(data);
             setShowPointFlag(false);
+            setZoom(12);
             setRequestDir(false);
+            setResponse(null);
             setCenter(data.origin);
             setRoute(data);
             setShowDirectionsFlag(true);
