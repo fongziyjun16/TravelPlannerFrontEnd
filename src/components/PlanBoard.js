@@ -19,6 +19,8 @@ function PlanBoard(props) {
 
     const navigate = useNavigate();
     const days = props.days;
+    let city = {};
+    const [cityName, setCityName] = useState('');
     const [collapseActiveKeys, setCollapseActiveKeys] = useState([]);
     const selectedCategories = JSON.parse(localStorage.getItem('selectedCategories') === null ? '[]' : localStorage.getItem('selectedCategories'));
     let selectedLocation = {};
@@ -35,6 +37,14 @@ function PlanBoard(props) {
     let note = '';
 
     useEffect(() => {
+        city = JSON.parse(localStorage.getItem('center') === null ? 'null' : localStorage.getItem('center'));
+        if (city === null) {
+            message.error('Choose A CITY First!!!')
+            navigate('/search');
+        }
+        // console.log(city);
+        setCityName(city.name);
+
         // console.log(props);
         let currPlans = [];
         for (let i = 1; i <= days; i++) {
@@ -61,7 +71,7 @@ function PlanBoard(props) {
         points = [];
         if (selectedCategories.length === 0) {
             axios.get(
-                '/search/points'
+                '/search/points?location=' + city.name
             ).then(response => {
                 // console.log(response);
                 points = response.data;
@@ -79,7 +89,12 @@ function PlanBoard(props) {
             // console.log(selectedCategories);
             let tasks = [];
             selectedCategories.forEach((category) => {
-                tasks.push(axios.get('/search/category?category_name=' + encodeURIComponent(category)));
+                tasks.push(axios.get(
+                    '/search/category?location=' +
+                    city.name + '&' +
+                    'category_name=' +
+                    encodeURIComponent(category)
+                ));
             });
             Promise.all(tasks).then(pointSet => {
                 points = [];
@@ -264,6 +279,7 @@ function PlanBoard(props) {
                             backgroundColor: "#e6e6e6",
                             fontSize: 16,
                             fontWeight: 600 }}>
+                            <span>{cityName}</span>
                             <span>Start: {props.startDate}</span>
                             <span>End: {props.endDate}</span>
                         </Header>

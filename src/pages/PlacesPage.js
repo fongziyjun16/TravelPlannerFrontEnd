@@ -12,8 +12,15 @@ function PlacesPage() {
     const [categories, setCategories] = useState([]);
 
     useEffect(() => {
+        const city = JSON.parse(localStorage.getItem('center') === null ? 'null' : localStorage.getItem('center'));
+        // console.log(city);
+        if (city === null) {
+            message.error('Choose A CITY First!!!')
+            navigate('/search');
+        }
+
         axios.get(
-            '/search/categories'
+            '/search/categories?location=' + city.name
         ).then(response => {
             // console.log(response);
             setCategories(response.data);

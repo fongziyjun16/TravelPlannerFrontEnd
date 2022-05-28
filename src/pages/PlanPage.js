@@ -1,13 +1,23 @@
-import React, {useState} from "react";
-import {Col, Row, Spin} from "antd";
+import React, {useEffect, useState} from "react";
+import {Col, message, Row, Spin} from "antd";
 import PlanBoard from "../components/PlanBoard";
-import {useLocation} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import TravelMap from "../components/TravelMap";
 
 function PlanPage() {
 
+    const [defaultCity, setDefaultCity] = useState({});
+    const navigate = useNavigate();
     const urlLocation = useLocation();
     const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        let city = JSON.parse(localStorage.getItem('center') === null ? 'null' : localStorage.getItem('center'));
+        if (city === null) {
+            message.error('Choose A CITY First!!!')
+            navigate('/search');
+        }
+    }, [])
 
     function setPageStatus(flag) {
         setLoading(flag);
@@ -21,6 +31,7 @@ function PlanPage() {
                     style={{ height: "920px" }}>
                     <Col span={12}>
                         <PlanBoard
+                            city={defaultCity}
                             setPageStatus={setPageStatus}
                             days={urlLocation.state !== null ? urlLocation.state.days : 5}
                             startDate={urlLocation.state !== null ? urlLocation.state.startDate : '2022-05-01'}
@@ -28,7 +39,7 @@ function PlanPage() {
                         />
                     </Col>
                     <Col span={12}>
-                        <TravelMap />
+                        <TravelMap city={defaultCity} />
                     </Col>
                 </Row>
             </Spin>

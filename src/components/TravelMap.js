@@ -1,19 +1,36 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import PubSub from "pubsub-js";
 import {GoogleMap, Marker, LoadScript, DirectionsService, DirectionsRenderer} from "@react-google-maps/api";
+import {message} from "antd";
+import {useNavigate} from "react-router-dom";
 
-function TravelMap() {
+function TravelMap(props) {
 
+    let city = {};
+    const navigate = useNavigate();
     const [zoom, setZoom] = useState(12);
-    const [center, setCenter] = useState({
-        lat: 34.0522,
-        lng: -118.2437
-    });
+    const [center, setCenter] = useState({});
     const [route, setRoute] = useState(null);
     const [requestDir, setRequestDir] = useState(false);
     const [response, setResponse] = useState(null);
     const [showPointFlag, setShowPointFlag] = useState(true);
     const [showDirectionsFlag, setShowDirectionsFlag] = useState(false);
+
+    useEffect(() => {
+        city = JSON.parse(localStorage.getItem('center') === null ? 'null' : localStorage.getItem('center'));
+        if (city === null) {
+            message.error('Choose A CITY First!!!')
+            navigate('/search');
+        }
+        // console.log(city);
+
+        setCenter({
+            lat: city.lat,
+            lng: city.lng
+        });
+        setShowDirectionsFlag(false);
+        setShowPointFlag(true);
+    }, []);
 
     function directionsCallback (result, status) {
         if (status === 'OK') {
