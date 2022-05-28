@@ -126,7 +126,7 @@ class AppHeader extends Component {
             <>
                 <Header style={{ display: "flex", justifyContent: "space-between" }}>
                     <div style={{ fontSize: 16, fontWeight: 600, color: "white" }}>
-                        Travel Planner
+                        Smart Trip
                     </div>
                     <div>
                         <Dropdown overlay={ <Menu items={ this.getUserMenuItem() } onClick= { this.userMenuClick }/> }>
