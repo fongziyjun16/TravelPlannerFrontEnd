@@ -405,7 +405,7 @@ function PlanBoard(props) {
                 onCancel={handleCloseLocationInfo}
                 footer={null}
             >
-                <p>{locationInfo.description}</p>
+                <p><span style={{ fontWeight: "bold" }}>Description: </span>{locationInfo.description}</p>
                 <Image src={locationInfo.image} />
             </Modal>
         </>
