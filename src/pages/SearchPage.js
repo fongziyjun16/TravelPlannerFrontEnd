@@ -59,7 +59,11 @@ function SearchPage() {
         keyWord = keyWord.trim();
         keyWord = keyWord.replace(' ', '_');
         const defaultCity = defaultCities.find(city => city.name === keyWord);
-        // console.log(defaultCity);
+        console.log(defaultCity);
+        if (defaultCity === undefined || defaultCity === null) {
+            message.warning('Sorry! Please input city or This City is not supported yet!');
+            return;
+        }
         localStorage.setItem('center', JSON.stringify(defaultCity));
         navigate('/places');
     }
