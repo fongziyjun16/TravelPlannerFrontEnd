@@ -61,12 +61,6 @@ function PlanBoard(props) {
         }
         setAddItems([...currAddItems]);
 
-        let currActiveKeys = [];
-        for (let i = 1; i <= days; i++) {
-            currActiveKeys.push(i);
-        }
-        setCollapseActiveKeys([...currActiveKeys]);
-
         // console.log(selectedCategories);
         points = [];
         if (selectedCategories.length === 0) {
@@ -191,6 +185,7 @@ function PlanBoard(props) {
                 lat: plan[nums - 1].lat,
                 lng: plan[nums - 1].lng
             };
+            // console.log(data);
             PubSub.publish('ShowDirections', data);
         }
     }
@@ -278,19 +273,28 @@ function PlanBoard(props) {
                         <Header style={{
                             display: "flex",
                             justifyContent: "space-between",
-                            backgroundColor: "#e6e6e6",
+                            backgroundColor: "#F5F5F5",
                             fontSize: 16,
                             fontWeight: 600 }}>
                             <span>{cityName}</span>
                             <span>Start: {props.startDate}</span>
                             <span>End: {props.endDate}</span>
                         </Header>
-                        <Content style={{height: "580px", border: "groove", marginTop: 5, overflow: "auto"}}>
-                            <Collapse activeKey={collapseActiveKeys} style={{margin: "5px"}}>
+                        <Content style={{height: "500px", border: "groove", marginTop: 5, overflow: "auto"}}>
+                            <Collapse
+                                defaultActiveKey={(() => {
+                                    let currActiveKeys = [];
+                                    for (let i = 1; i <= days; i++) {
+                                        currActiveKeys.push(i + '');
+                                    }
+                                    return currActiveKeys;
+                                })()}
+                                style={{margin: "5px"}}
+                            >
                                 {new Array(days).fill(null).map((_, index) => (
                                     <Panel
                                         header={"Day " + (index + 1)}
-                                        key={index + 1}
+                                        key={(index + 1) + ''}
                                         extra={
                                             <a onClick={(e) => {
                                                 handleDisplayDirections(index);
@@ -337,7 +341,12 @@ function PlanBoard(props) {
                                 style={{ width: "100%", height: "100%" }}/>
                         </Content>
                         <Footer>
-                            <Button type="primary" onClick={handleSavePlan} shape="round" block>
+                            <Button
+                                type="primary"
+                                onClick={handleSavePlan}
+                                shape="round" block
+                                style={{ border: "none", backgroundColor: "#2BBCD6" }}
+                            >
                                 Save
                             </Button>
                         </Footer>

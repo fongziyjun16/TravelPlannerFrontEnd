@@ -25,27 +25,42 @@ function HowManyDayPage() {
 
     return (
         <>
-            <Row align="middle" justify="center" style={{height: '100%'}}>
+            <Row
+                align="middle"
+                justify="center"
+                style={{
+                    backgroundImage: 'url(https://images.unsplash.com/photo-1518557984649-7b161c230cfa?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2340&q=80)',
+                    backgroundRepeat: 'no-repeat',
+                    backgroundSize: '1800px 1000px',
+                    height: '100%'
+                }}
+            >
                 <Col>
                     <Space direction="vertical" size="middle" style={{display: 'flex'}}>
-                        <h1>How many days do you want to travel?</h1>
+                        <h1>
+                            <span style={{ color: 'navy' }}>
+                                How many days do you want to travel?
+                            </span>
+                        </h1>
                         <Form
                             name="daysForm"
                             onFinish={handleConfirm}
                             initialValues={{
                                 'days': 5
                             }}>
-                            {/*<Form.Item>*/}
-                            {/*    <Form.Item name="days" noStyle>*/}
-                            {/*        <InputNumber min={1} max={10}/>*/}
-                            {/*    </Form.Item>*/}
-                            {/*    <span className="ant-form-text"> days</span>*/}
-                            {/*</Form.Item>*/}
                             <Form.Item name="dateRange" rules={[{ type: 'array', required: true, message: 'Please select time!' }]}>
-                                <RangePicker />
+                                <RangePicker size="large" />
                             </Form.Item>
                             <Form.Item>
-                                <Button type="primary" htmlType="submit">
+                                <Button
+                                    type="primary"
+                                    htmlType="submit"
+                                    shape="round"
+                                    style={{
+                                        border: 'none',
+                                        backgroundColor: '#2BBCD6'
+                                    }}
+                                >
                                     Confirm
                                 </Button>
                             </Form.Item>

@@ -30,7 +30,7 @@ function PlanPage() {
             <Spin spinning={loading}>
                 <Row
                     justify="space-around"
-                    style={{ height: "920px" }}>
+                    style={{ height: "820px" }}>
                     <Col span={12}>
                         <PlanBoard
                             city={city}

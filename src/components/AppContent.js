@@ -5,8 +5,7 @@ import SearchPage from "../pages/SearchPage";
 import PlacesPage from "../pages/PlacesPage";
 import HowManyDayPage from "../pages/HowManyDayPage";
 import UserProfile from "../pages/UserProfile";
-import GoogleMapPage from "../pages/GoogleMapPage"
-import PlanPage from "../pages/PlanPage";
+import PlanPage from "../pages/PlanPage"
 import SavePlanSuccessPage from "../pages/SavePlanSuccessPage";
 
 const { Content } = Layout;
@@ -20,7 +19,6 @@ function AppContent() {
                     <Route path="/places" element={<PlacesPage />}/>
                     <Route path="/days" element={<HowManyDayPage />}/>
                     <Route path="/profile" element={<UserProfile />}/>
-                    {/* <Route path="/map" element={<GoogleMapPage />}/> */}
                     <Route path="/map" element={<PlanPage />}/>
                     <Route path="/success" element={<SavePlanSuccessPage />}/>
                     <Route path="*" element={<Navigate to="/search" replace/>}/>
@@ -28,7 +26,6 @@ function AppContent() {
             </Content>
         </>
     )
-    
 }
 
 export default AppContent;

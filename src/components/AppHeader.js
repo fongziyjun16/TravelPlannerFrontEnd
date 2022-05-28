@@ -1,8 +1,9 @@
 import React, { Component } from "react";
-import { Layout, Dropdown, Menu, Button, Modal, Form, Input, Row, Col, message } from "antd";
+import {Layout, Dropdown, Menu, Button, Modal, Form, Input, Row, Col, message, Image, Avatar} from "antd";
 import { UserOutlined } from "@ant-design/icons"
 import {useNavigate} from "react-router-dom";
 import axios from "axios";
+import logo from "../assets/images/logo.png";
 
 const { Header } = Layout;
 
@@ -124,20 +125,22 @@ class AppHeader extends Component {
     render() {
         return (
             <>
-                <Header style={{ display: "flex", justifyContent: "space-between" }}>
-                    <div style={{ fontSize: 16, fontWeight: 600, color: "white" }}>
-                        Smart Trip
+                <Header style={{ display: "flex", justifyContent: "space-between", backgroundColor: "#F5F5F5" }}>
+                    <div style={{ fontSize: 16, fontWeight: 600, color: "black" }}>
+                        <Avatar shape="square" src={logo} />
+                        <span>Smart Trip</span>
                     </div>
                     <div>
                         <Dropdown overlay={ <Menu items={ this.getUserMenuItem() } onClick= { this.userMenuClick }/> }>
                             <Row>
                                 <Col>
-                                    <Button icon={ <UserOutlined /> } shape="circle" />
+                                    <Avatar shape="circle" icon={<UserOutlined />} />
+                                    {/*<Button icon={ <UserOutlined /> } shape="circle" />*/}
                                 </Col>
                                 <Col>
                                     {
                                         this.state.login && (
-                                            <div style={{ fontSize: 12, fontWeight: 600, color: "white" }}>
+                                            <div style={{ fontSize: 12, fontWeight: 600, color: "black" }}>
                                                 <span style={{ fontWeight: "bold" }}>Welcome</span> &nbsp;
                                                 { this.state.username }
                                             </div>

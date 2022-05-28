@@ -6,30 +6,54 @@ import {useNavigate} from "react-router-dom";
 
 function TravelMap(props) {
 
-    let city = {};
     const navigate = useNavigate();
     const [zoom, setZoom] = useState(12);
-    const [center, setCenter] = useState({});
+    const [center, setCenter] = useState({
+        lat: 39.904202,
+        lng: 116.407394
+    });
     const [route, setRoute] = useState(null);
     const [requestDir, setRequestDir] = useState(false);
     const [response, setResponse] = useState(null);
-    const [showPointFlag, setShowPointFlag] = useState(true);
     const [showDirectionsFlag, setShowDirectionsFlag] = useState(false);
+    const [showPointFlag, setShowPointFlag] = useState(true);
 
     useEffect(() => {
-        city = JSON.parse(localStorage.getItem('center') === null ? 'null' : localStorage.getItem('center'));
+        let city = JSON.parse(localStorage.getItem('center') === null ? 'null' : localStorage.getItem('center'));
         if (city === null) {
             message.error('Choose A CITY First!!!')
             navigate('/search');
         }
         // console.log(city);
 
-        setCenter({
-            lat: city.lat,
-            lng: city.lng
+        PubSub.subscribe('ShowPoint', (msg, point) => {
+            // console.log(point);
+            setShowDirectionsFlag(false);
+            setCenter({
+                lat: point.lat,
+                lng: point.lng
+            });
+            setShowPointFlag(true);
         });
-        setShowDirectionsFlag(false);
-        setShowPointFlag(true);
+
+        PubSub.subscribe('ShowDirections', (msg, data) => {
+            // console.log(data);
+            setShowPointFlag(false);
+            setRequestDir(false);
+            setCenter(data.origin);
+            setRoute(data);
+            setShowDirectionsFlag(true);
+        });
+
+        PubSub.publish('ShowPoint', {
+            lat: city.lat,
+            lng: city.lng,
+        });
+
+        return () =>{
+            PubSub.unsubscribe('ShowPoint');
+            PubSub.unsubscribe('ShowDirections');
+        }
     }, []);
 
     function directionsCallback (result, status) {
@@ -40,39 +64,20 @@ function TravelMap(props) {
         }
     }
 
-    PubSub.subscribe('ShowPoint', showPoint);
-
-    function showPoint(msg, point) {
-        setShowDirectionsFlag(false);
-        setZoom(14);
-        setCenter({
-            lat: point.lat,
-            lng: point.lng
-        });
-        setShowPointFlag(true);
-    }
-
-    PubSub.subscribe('ShowDirections', showDirections)
-
-    function showDirections(msg, data) {
-        // console.log(data);
-        setShowPointFlag(false);
-        setRequestDir(false);
-        setShowDirectionsFlag(true);
-        setCenter(data.origin);
-        setRoute(data);
-    }
-
     return (
         <>
             <LoadScript
-                googleMapsApiKey="AIzaSyCtdpUYxLPw3EnxfIy5T1G8eAUSbt41s1M">
+                googleMapsApiKey="AIzaSyCtdpUYxLPw3EnxfIy5T1G8eAUSbt41s1M"
+            >
                 <GoogleMap
                     mapContainerStyle={{ width: '100%', height: '100%' }}
                     center={center}
                     zoom={zoom}>
                     { /* Child components, such as markers, info windows, etc. */ }
-                    <Marker position={center} visible={showPointFlag} />
+                    <Marker
+                        position={center}
+                        visible={showPointFlag}
+                    />
                     {
                         showDirectionsFlag && (
                             <>
@@ -101,6 +106,7 @@ function TravelMap(props) {
                     }
                 </GoogleMap>
             </LoadScript>
+
         </>
     );
 
