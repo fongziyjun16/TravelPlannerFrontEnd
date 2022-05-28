@@ -3,7 +3,7 @@ import {Layout, Dropdown, Menu, Button, Modal, Form, Input, Row, Col, message, I
 import { UserOutlined } from "@ant-design/icons"
 import {useNavigate} from "react-router-dom";
 import axios from "axios";
-import logo from "../assets/images/logo.png";
+import logo from "../assets/images/Logo.png";
 
 const { Header } = Layout;
 
