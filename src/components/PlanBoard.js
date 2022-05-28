@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Button, Col, Collapse, Dropdown, Layout, List, Menu, Popover, Row, Input, Modal, message} from "antd";
+import {Button, Col, Collapse, Dropdown, Layout, List, Menu, Popover, Row, Input, Modal, message, Image} from "antd";
 import {
     ArrowDownOutlined,
     ArrowUpOutlined,
@@ -406,6 +406,7 @@ function PlanBoard(props) {
                 footer={null}
             >
                 <p>{locationInfo.description}</p>
+                <Image src={locationInfo.image} />
             </Modal>
         </>
     );
