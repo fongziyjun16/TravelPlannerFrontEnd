@@ -12,9 +12,13 @@ function SavePlanSuccessPage() {
                 status="success"
                 title="Congratulations! Successfully Saved Your Plan!"
                 extra={[
-                    <Button type="primary" onClick={() => {
-                        navigate('/search');
-                    }}>
+                    <Button 
+                        key={1}
+                        type="primary" 
+                        onClick={() => {
+                            navigate('/search');
+                        }}
+                    >
                         Back to Search Page.
                     </Button>
                 ]}
